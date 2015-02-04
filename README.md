@@ -1,5 +1,5 @@
 # j-async
-Asynchronous helpers similar to promises. This API was originally intended to to support jasmine 1.3, but has been reorganized to be compatible outside of testing environments as well as jasmine 2.0.  
+Asynchronous javascript helpers similar to promises. This API was originally intended to to support jasmine 1.3, but has been reorganized to be compatible outside of testing environments as well as jasmine 2.0.  
 
 ##Usage
 Include async.js in your script runner after jasmine.js
