@@ -76,9 +76,6 @@ function async (calls) {
 		} else {
 			r = called;
 		}
-		//console.error(not_ready);
-		//console.error(r,called);
-		//console.error(then);
 		(!not_ready) && (r||called) && (
 			accessor.$$complete = true,
 			called = false,
@@ -104,7 +101,6 @@ function async (calls) {
 		var me = this;
 		return this(function () {}).then(function () {
 			fn && fn.apply(this,arguments);
-			console.error(behavior);
 			if (!behavior) {
 				me.complete.apply(this,arguments);
 			}
@@ -136,128 +132,6 @@ function async (calls) {
 }
 async.ALL = 1;
 async.ANY = 2;
-/*
- *function async (calls) {
- *        var children = [],
- *        child,
- *        i,ln,
- *        scope,
- *        args,
- *        parent = undefined,
- *        complete,
- *        called = false,
- *        ready = false,
- *        child_call = false,
- *        child_any = false,
- *        result = undefined,
- *        run_call = false;
- *        function accessor () {
- *                var r = called;
- *                !child_call && (
- *                        (complete 
- *                                ? (complete.apply(this,arguments) && (r = called = true))
- *                                : (r = called = true)
- *                        ) && (
- *                                scope = this,
- *                                args = arguments
- *                ));
- *                if (!child_any) {
- *                        for (i=0,ln=children.length;i<ln;i++) {
- *                                child = children[i];
- *                                if (!children[i].$$any && !children[i].$$complete) {
- *                                        r = false;
- *                                        break;
- *                                }
- *                        }
- *                } else {
- *                        for (i=0,ln=children.length;i<ln;i++) {
- *                                child = children[i];
- *                                child.$$any && (child.$$complete = true);
- *                        }
- *                }
- *                if (ready && r) {
- *                        accessor.$$complete = true;
- *                        result = (calls && calls.apply(scope,args));
- *                        if (parent) {
- *                                parent.$$call_by_child(accessor);
- *                        }
- *                }
- *                return result;
- *
- *        }
- *        accessor.$$accessor = true;
- *        accessor.$$call_by_child = function (child) {
- *                child_call = true;
- *                child_any = child.$$any;
- *                try {
- *                        accessor();
- *                } catch (e) {
- *                        child_call = false;
- *                        throw e;
- *                } finally {
- *                        child_call = false;
- *                }
- *        }
- *        accessor.$$parent = function (p) {
- *                if (arguments.length) {
- *                        parent = p;
- *                        return this;
- *                } 
- *                return parent;
- *        };
- *        accessor.wait = function (fn) {
- *                return fn && (
- *                        i = children.push(async(fn)) - 1,
- *                        i = children[i].$$parent(accessor),
- *                        i
- *                );
- *        };
- *        accessor.wait.only = function (fn) {
- *                return (i = wait(fn)) && (i.ready());
- *        };
- *        accessor.all = accessor.group = function (fn) {
- *                fn && fn(accessor.wait);
- *                return this;
- *        };
- *        function any (fn) {
- *                (i = accessor.wait(fn)) && (i.$$any = true); 
- *                return i;
- *        }
- *        any.only = function (fn) {
- *                return (i = any(fn)) && (i.ready());
- *        };
- *        accessor.any = function (fn) {
- *                fn && fn(any);
- *                return this;
- *        };
- *        accessor.only = function (fn) {
- *                return accessor.calls(fn).ready();
- *        };
- *        accessor.complete = function () {
- *                called = true;
- *        };
- *        accessor.ready = function (optional_function) {
- *                //optional_function && (complete = optional_function);
- *                //ready = true;
- *                //called && accessor();
- *                return this;
- *        };
- *        accessor.calls = function (fn) {
- *                if (arguments.length) {
- *                        calls = fn;
- *                        return this;
- *                } 
- *                return calls;
- *        };
- *        waitsFor(function () {
- *                return accessor.$$complete;
- *        });
- *        runs(function () {
- *                //empty fn
- *        });
- *        return accessor;
- *}
- */
 
 async.all = async.group = function (fn) {
 	return fn && async(function (async) {
@@ -267,9 +141,6 @@ async.all = async.group = function (fn) {
 			}));
 		});
 	});
-	//a();
-	//return a;
-	//return async().group(fn);
 };
 async.any = function (fn) {
 	return fn && async(function (async) {
@@ -282,26 +153,11 @@ async.any = function (fn) {
 };
 async.any = function (fn) {
 	var a = async().any(fn);
-	//a();
 	return a;
-	//return async().any(fn);
 };
 async.only = function (fn) {
 	return async().only(fn);
 };
-//async.ready = function (fn) {
-	//return async().ready(fn);
-//};
-//async.any.ready = async.ready.any = function (fn) {
-	//var a = async().ready().any(fn);
-	//a();
-	//return a;
-//};
-//async.all.ready = async.ready.all = async.group.ready = async.ready.group = function (fn) {
-	//var a = async().ready().any(fn);
-	//a();
-	//return a;
-//};
 
 (typeof module)[0] === 'o' && module && module.exports && (
 	module.exports = async
